@@ -2,7 +2,9 @@ const Class = require('./ClassModel');
 const Student = require('../Student/StudentModel');
 const Coach = require('../Coach/CoachModel');
 const Location = require('../Location/LocationModel');
-const { DateTime } = require('luxon');
+const { DateTime, Settings } = require('luxon');
+
+Settings.defaultZone = 'Asia/Taipei';
 
 exports.getClasses = async (req, res) => {
     const { currentDate, startOfWeek, day, location, coach } = req.query;
@@ -30,8 +32,8 @@ exports.getClasses = async (req, res) => {
         // console.log(data.startTime);
         return {
             _id: data._id,
-            startTime: DateTime.fromISO(data.startTime).setZone('Asia/Taipei').toObject(),
-            endTime: DateTime.fromISO(data.endTime).setZone('Asia/Taipei').toObject(),
+            startTime: DateTime.fromISO(data.startTime).toObject(),
+            endTime: DateTime.fromISO(data.endTime).toObject(),
             student: studentMap,
             coach: data.coach,
             location: data.location,
@@ -45,8 +47,8 @@ exports.setClass = async (req, res) => {
     let { startTime, endTime, studentArr, coachName, location, note } = req.body;
     const coach = await Coach.findOne({ name: coachName });
     const court = await Location.findOne({ name: location.name });
-    startTime = DateTime.fromObject(startTime).setZone('Asia/Taipei').toISO();
-    endTime = DateTime.fromObject(endTime).setZone('Asia/Taipei').toISO();
+    startTime = DateTime.fromObject(startTime).toISO();
+    endTime = DateTime.fromObject(endTime).toISO();
 
     const lesson = await Class.create({
         startTime,
@@ -69,8 +71,8 @@ exports.updateClass = async (req, res) => {
     let { _id, startTime, endTime, studentArr, coachName, location, note } = req.body;
     const coach = await Coach.findOne({ name: coachName });
     const court = await Location.findOne({ name: location.name });
-    startTime = DateTime.fromObject(startTime).setZone('Asia/Taipei').toISO();
-    endTime = DateTime.fromObject(endTime).setZone('Asia/Taipei').toISO();
+    startTime = DateTime.fromObject(startTime).toISO();
+    endTime = DateTime.fromObject(endTime).toISO();
     
     const lesson = await Class.findByIdAndUpdate(_id, {
         startTime,
@@ -99,8 +101,8 @@ exports.deleteClass = (req, res) => {
 
 exports.copyClasses = async (req, res) => {
     const { period, startOfWeek } = req.body;
-    const startPeriod = DateTime.fromObject(startOfWeek).setZone('Asia/Taipei').minus({ weeks: period }).toISO();
-    const endPeriod = DateTime.fromObject(startOfWeek).setZone('Asia/Taipei').toISO();
+    const startPeriod = DateTime.fromObject(startOfWeek).minus({ weeks: period }).toISO();
+    const endPeriod = DateTime.fromObject(startOfWeek).toISO();
 
     const dbQuery = {
         startTime: { $gt: startPeriod, $lt: endPeriod }
@@ -108,8 +110,8 @@ exports.copyClasses = async (req, res) => {
 
     const classData = await Class.find(dbQuery, { _id: 0 });
     classData.forEach(data => {
-        data.startTime = DateTime.fromISO(data.startTime).setZone('Asia/Taipei').plus({ weeks: period }).toISO();
-        data.endTime = DateTime.fromISO(data.endTime).setZone('Asia/Taipei').plus({ weeks: period }).toISO();
+        data.startTime = DateTime.fromISO(data.startTime).plus({ weeks: period }).toISO();
+        data.endTime = DateTime.fromISO(data.endTime).plus({ weeks: period }).toISO();
     });
     const result = await Class.insertMany(classData);
     res.send(result);

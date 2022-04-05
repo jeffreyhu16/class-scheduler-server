@@ -1,19 +1,20 @@
-const { DateTime } = require('luxon')
+const { DateTime, Settings } = require('luxon')
+Settings.defaultZone = 'Asia/Taipei';
 
 exports.getCurrentDate = (req, res) => {
-    const currentDate = DateTime.local().setZone('Asia/Taipei').startOf('day');
+    const currentDate = DateTime.local().startOf('day');
     res.send(currentDate.toObject());
 }
 
 exports.getStartOfWeek = (req, res) => {
-    const currentDate = DateTime.local().setZone('Asia/Taipei');
+    const currentDate = DateTime.local();
     const monday = currentDate.startOf('week');
     res.send(monday.toObject());
 }
 
 exports.getFullWeek = (req, res) => {
     const { startOfWeek } = req.query;
-    const monday = DateTime.fromISO(startOfWeek).setZone('Asia/Taipei');
+    const monday = DateTime.fromISO(startOfWeek);
 
     res.send({
         mon: monday.toObject(),
