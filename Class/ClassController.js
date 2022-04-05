@@ -27,7 +27,7 @@ exports.getClasses = async (req, res) => {
 
     const response = result.map(data => {
         const studentMap = data.student.map(student => student.name);
-        console.log(data.startTime);
+        // console.log(data.startTime);
         return {
             _id: data._id,
             startTime: DateTime.fromISO(data.startTime).setZone('Asia/Taipei').toObject(),
