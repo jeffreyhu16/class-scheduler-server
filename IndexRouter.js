@@ -16,4 +16,3 @@ exports.combinedRoute = (app) => {
     app.use('/location', locationRouter);
     app.use('/coach', coachRouter);
 }
-
