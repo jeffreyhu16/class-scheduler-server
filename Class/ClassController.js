@@ -3,7 +3,6 @@ const Student = require('../Student/StudentModel');
 const Coach = require('../Coach/CoachModel');
 const Location = require('../Location/LocationModel');
 const { DateTime, Settings } = require('luxon');
-
 Settings.defaultZone = 'Asia/Taipei';
 
 exports.getClasses = async (req, res) => {
@@ -19,6 +18,7 @@ exports.getClasses = async (req, res) => {
     const dbQuery = {
         startTime: { $gt: startQuery, $lt: endQuery }
     }
+    console.log(coachDoc)
     if (location !== 'all') dbQuery['location._id'] = locationDoc;
     if (coach !== 'all') dbQuery.coach = coachDoc;
 
@@ -59,7 +59,7 @@ exports.setClass = async (req, res) => {
     });
 
     const student = studentArr.map(async stud => {
-        return await Student.findOne({ name: stud }); 
+        return await Student.findOne({ name: stud });
     });
 
     lesson.student = await Promise.all(student);
@@ -73,7 +73,7 @@ exports.updateClass = async (req, res) => {
     const court = await Location.findOne({ name: location.name });
     startTime = DateTime.fromObject(startTime).toISO();
     endTime = DateTime.fromObject(endTime).toISO();
-    
+
     const lesson = await Class.findByIdAndUpdate(_id, {
         startTime,
         endTime,
@@ -83,7 +83,7 @@ exports.updateClass = async (req, res) => {
     }, { new: true });
 
     const student = studentArr.map(async stud => {
-        return await Student.findOne({ name: stud }); 
+        return await Student.findOne({ name: stud });
     });
 
     lesson.student = await Promise.all(student);
@@ -115,4 +115,14 @@ exports.copyClasses = async (req, res) => {
     });
     const result = await Class.insertMany(classData);
     res.send(result);
+}
+
+const test = async () => {
+    const court = await Location.findOne({ name: "St Roch's" });
+    // const lesson = await Class.updateMany(
+    //     { name: "St Roch's" },
+    //     { $set: { location: { _id: court }}}
+    // );
+    const lesson = await Class.find({ name: "St Roch's" }).populate('location._id', 'id');
+    console.log(lesson);
 }
