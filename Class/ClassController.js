@@ -103,18 +103,19 @@ exports.copyClasses = async (req, res) => {
     const { period, startOfWeek } = req.body;
     const startPeriod = DateTime.fromObject(startOfWeek).minus({ weeks: period }).toISO();
     const endPeriod = DateTime.fromObject(startOfWeek).toISO();
-    console.log(startPeriod)
+    
     const dbQuery = {
         startTime: { $gt: startPeriod, $lt: endPeriod }
     }
-
+    
     const classData = await Class.find(dbQuery, { _id: 0 });
+    // console.log('classData:', classData)
     classData.forEach(data => {
         data.startTime = DateTime.fromISO(data.startTime).plus({ weeks: period }).toISO();
         data.endTime = DateTime.fromISO(data.endTime).plus({ weeks: period }).toISO();
     });
     const result = await Class.insertMany(classData);
-    res.send(result);
+    res.send(classData);
 }
 
 const test = async () => {
