@@ -18,7 +18,7 @@ exports.getClasses = async (req, res) => {
     const dbQuery = {
         startTime: { $gt: startQuery, $lt: endQuery }
     }
-    console.log(coachDoc)
+
     if (location !== 'all') dbQuery['location._id'] = locationDoc;
     if (coach !== 'all') dbQuery.coach = coachDoc;
 
@@ -103,7 +103,7 @@ exports.copyClasses = async (req, res) => {
     const { period, startOfWeek } = req.body;
     const startPeriod = DateTime.fromObject(startOfWeek).minus({ weeks: period }).toISO();
     const endPeriod = DateTime.fromObject(startOfWeek).toISO();
-
+    console.log(startPeriod)
     const dbQuery = {
         startTime: { $gt: startPeriod, $lt: endPeriod }
     }
