@@ -30,6 +30,9 @@ const classSchema = new Schema({
     },
     note: {
         type: String,
+    },
+    isLeave: {
+        type: Boolean
     }
 });
 

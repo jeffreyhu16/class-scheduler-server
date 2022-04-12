@@ -37,14 +37,15 @@ exports.getClasses = async (req, res) => {
             student: studentMap,
             coach: data.coach,
             location: data.location,
-            note: data.note
+            note: data.note,
+            isLeave: data.isLeave
         }
     });
     res.send(response);
 }
 
 exports.setClass = async (req, res) => {
-    let { startTime, endTime, studentArr, coachName, location, note } = req.body;
+    let { startTime, endTime, studentArr, coachName, location, note, isLeave } = req.body;
     const coach = await Coach.findOne({ name: coachName });
     const court = await Location.findOne({ name: location.name });
     startTime = DateTime.fromObject(startTime).toISO();
@@ -55,7 +56,8 @@ exports.setClass = async (req, res) => {
         endTime,
         coach,
         location: { courtNo: location.courtNo, _id: court },
-        note
+        note,
+        isLeave
     });
 
     const student = studentArr.map(async stud => {
@@ -68,7 +70,7 @@ exports.setClass = async (req, res) => {
 }
 
 exports.updateClass = async (req, res) => {
-    let { _id, startTime, endTime, studentArr, coachName, location, note } = req.body;
+    let { _id, startTime, endTime, studentArr, coachName, location, note, isLeave } = req.body;
     const coach = await Coach.findOne({ name: coachName });
     const court = await Location.findOne({ name: location.name });
     startTime = DateTime.fromObject(startTime).toISO();
@@ -79,7 +81,8 @@ exports.updateClass = async (req, res) => {
         endTime,
         coach,
         location: { courtNo: location.courtNo, _id: court },
-        note
+        note,
+        isLeave
     }, { new: true });
 
     const student = studentArr.map(async stud => {
