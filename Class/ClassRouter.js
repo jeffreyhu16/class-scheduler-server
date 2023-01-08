@@ -1,11 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const classController = require('./ClassController');
+const { 
+    getClasses, 
+    setClass, 
+    copyClasses, 
+    updateClass, 
+    deleteClass 
+} = require('./ClassController');
 
-router.get('/classes', classController.getClasses);
-router.post('/', classController.setClass);
-router.post('/copy', classController.copyClasses);
-router.put('/', classController.updateClass);
-router.delete('/', classController.deleteClass);
+router.get('/classes', getClasses);
+router.post('/', setClass);
+router.post('/copy', copyClasses);
+router.put('/', updateClass);
+router.delete('/', deleteClass);
 
 module.exports = router;

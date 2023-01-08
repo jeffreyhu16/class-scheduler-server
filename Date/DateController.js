@@ -29,8 +29,8 @@ exports.getFullWeek = (req, res) => {
 
 exports.getTimeOptions = (req, res) => {
     let response = []; 
-    let startOfDay = DateTime.local().startOf('day').set({ hour: 6 });
-    for (let i = 0; i <= 72; i++) {
+    let startOfDay = DateTime.local().startOf('day').set({ hour: 7 });
+    for (let i = 0; i <= 64; i++) {
         let option = startOfDay.toFormat('h:mm a').toLowerCase();
         response.push(option);
         startOfDay = startOfDay.plus({ minutes: 15 });
